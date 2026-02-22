@@ -15,7 +15,8 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(Alias::new("nickname"))
                             .string_len(255)
-                            .not_null(),
+                            .not_null()
+                            .unique_key(),
                     )
                     .col(
                         ColumnDef::new(Alias::new("real_name"))
