@@ -12,7 +12,11 @@ impl MigrationTrait for Migration {
                     .table(Alias::new("tb_line"))
                     .if_not_exists()
                     .col(pk_auto(Alias::new("id")))
-                    .col(integer(Alias::new("name")).not_null())
+                    .col(
+                        ColumnDef::new(Alias::new("name"))
+                            .string_len(255)
+                            .not_null(),
+                    )
                     .to_owned(),
             )
             .await

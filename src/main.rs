@@ -6,7 +6,7 @@ mod services;
 use actix_web::{web, App, HttpServer};
 use sea_orm::Database;
 
-use router::{line_router, player_router};
+use router::{confrontation_router, line_router, player_router};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -21,6 +21,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(db_data.clone())
             .configure(player_router::config)
             .configure(line_router::config)
+            .configure(confrontation_router::config)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
