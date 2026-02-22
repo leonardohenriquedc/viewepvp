@@ -1,9 +1,9 @@
 pub use sea_orm_migration::prelude::*;
 
-mod m20220101_000001_create_table;
 mod m20260221_225946_tb_player;
-mod m20260221_230104_tb_confrontation;
-mod m20260221_231004_tb_line;
+mod m20260221_230000_tb_line;
+mod m20260221_230100_tb_line_player;
+mod m20260221_230200_tb_confrontation;
 
 pub struct Migrator;
 
@@ -11,10 +11,10 @@ pub struct Migrator;
 impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
-            Box::new(m20220101_000001_create_table::Migration),
             Box::new(m20260221_225946_tb_player::Migration),
-            Box::new(m20260221_230104_tb_confrontation::Migration),
-            Box::new(m20260221_231004_tb_line::Migration),
+            Box::new(m20260221_230000_tb_line::Migration),
+            Box::new(m20260221_230100_tb_line_player::Migration),
+            Box::new(m20260221_230200_tb_confrontation::Migration),
         ]
     }
 }

@@ -9,11 +9,19 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table("tb_player")
+                    .table(Alias::new("tb_player"))
                     .if_not_exists()
-                    .col(pk_auto("id"))
-                    .col(string("nickname"))
-                    .col(string("name"))
+                    .col(pk_auto(Alias::new("id")))
+                    .col(
+                        ColumnDef::new(Alias::new("nickname"))
+                            .string_len(255)
+                            .not_null(),
+                    )
+                    .col(
+                        ColumnDef::new(Alias::new("real_name"))
+                            .string_len(255)
+                            .not_null(),
+                    )
                     .to_owned(),
             )
             .await
@@ -21,7 +29,7 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table("tb_player").to_owned())
+            .drop_table(Table::drop().table(Alias::new("tb_player")).to_owned())
             .await
     }
 }
