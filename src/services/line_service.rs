@@ -23,7 +23,6 @@ pub async fn list_lines(db: &DbConn) -> Result<Vec<LineWithPlayersResponse>, sea
                 .collect();
 
             LineWithPlayersResponse {
-                id: l.id,
                 name: l.name,
                 nicknames,
             }
@@ -35,7 +34,7 @@ pub async fn list_lines(db: &DbConn) -> Result<Vec<LineWithPlayersResponse>, sea
 
 pub async fn create_line(
     db: &DbConn,
-    name: i32,
+    name: String,
     nicknames: [String; 5],
 ) -> Result<LineWithPlayersResponse, sea_orm::DbErr> {
     let found_players = player::Entity::find()
@@ -77,7 +76,6 @@ pub async fn create_line(
     txn.commit().await?;
 
     Ok(LineWithPlayersResponse {
-        id: created_line.id,
         name: created_line.name,
         nicknames: nicknames.to_vec(),
     })

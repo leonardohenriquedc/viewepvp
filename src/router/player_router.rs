@@ -37,7 +37,7 @@ async fn create_player(
 
     match result {
         Ok(player) => HttpResponse::Created().json(player),
-        Err(err) => HttpResponse::InternalServerError().json(serde_json::json!({
+        Err(err) => HttpResponse::BadRequest().json(serde_json::json!({
             "error": err.to_string()
         })),
     }
@@ -45,10 +45,10 @@ async fn create_player(
 
 async fn delete_player(
     db: web::Data<DbConn>,
-    path: web::Path<i32>,
+    path: web::Path<String>,
 ) -> impl Responder {
-    let id = path.into_inner();
-    let result = player_service::delete_player(db.get_ref(), id).await;
+    let nickname = path.into_inner();
+    let result = player_service::delete_player(db.get_ref(), &nickname).await;
 
     match result {
         Ok(()) => HttpResponse::NoContent().finish(),

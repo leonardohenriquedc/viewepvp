@@ -28,7 +28,7 @@ async fn create_line(
     body: web::Json<CreateLineRequest>,
 ) -> impl Responder {
     let result =
-        line_service::create_line(db.get_ref(), body.name, body.nicknames.clone()).await;
+        line_service::create_line(db.get_ref(), body.name.clone(), body.nicknames.clone()).await;
 
     match result {
         Ok(line) => HttpResponse::Created().json(line),
