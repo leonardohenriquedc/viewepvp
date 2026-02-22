@@ -1,16 +1,28 @@
+mod dto;
 mod models;
+mod router;
+mod services;
 
+use actix_web::{web, App, HttpServer};
 use sea_orm::Database;
+
+use router::{line_router, player_router};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let db = Database::connect("sqlite://database.db").await.unwrap();
+    let db = Database::connect("sqlite://database.db")
+        .await
+        .expect("Failed to connect to database");
 
-    let ping = db.ping().await;
+    let db_data = web::Data::new(db);
 
-    if ping.is_err() {
-        print!("Error in database connection");
-    }
-
-    Ok(())
+    HttpServer::new(move || {
+        App::new()
+            .app_data(db_data.clone())
+            .configure(player_router::config)
+            .configure(line_router::config)
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
