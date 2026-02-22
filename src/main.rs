@@ -1,3 +1,5 @@
+mod models;
+
 use sea_orm::Database;
 
 #[actix_web::main]
