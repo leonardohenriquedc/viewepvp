@@ -1,7 +1,32 @@
 use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, QueryFilter, Set};
+use tracing;
 
 use crate::dto::confrontation_dto::{ConfrontationResponse, CreateConfrontationRequest};
 use crate::models::{confrontation, line};
+
+pub async fn list_confrontations(
+    db: &DbConn,
+) -> Result<Vec<ConfrontationResponse>, sea_orm::DbErr> {
+    let confrontations = confrontation::Entity::find().all(db).await?;
+    let lines = line::Entity::find().all(db).await?;
+
+    let result = confrontations
+        .into_iter()
+        .filter_map(|c| {
+            let line_one = lines.iter().find(|l| l.id == c.line_one_id)?;
+            let line_two = lines.iter().find(|l| l.id == c.line_two_id)?;
+            Some(ConfrontationResponse {
+                line_one_name: line_one.name.clone(),
+                line_two_name: line_two.name.clone(),
+                date_of_confrontation: c.date_of_confrontation.to_string(),
+                point_of_line_one: c.point_of_line_one,
+                point_of_line_two: c.point_of_line_two,
+            })
+        })
+        .collect();
+
+    Ok(result)
+}
 
 pub async fn create_confrontation(
     db: &DbConn,
@@ -23,8 +48,11 @@ pub async fn create_confrontation(
             sea_orm::DbErr::Custom(format!("Line with name '{}' not found", req.line_two_name))
         })?;
 
-    let date = chrono::NaiveDate::parse_from_str(&req.date_of_confrontation, "%Y-%m-%d")
-        .map_err(|e| sea_orm::DbErr::Custom(format!("Invalid date format: {}", e)))?;
+    let date = chrono::NaiveDate::parse_from_str(&req.date_of_confrontation, "%Y/%m/%d")
+        .map_err(|e| {
+            tracing::debug!(date = %req.date_of_confrontation, "Invalid date format");
+            sea_orm::DbErr::Custom(format!("Invalid date format: {}", e))
+        })?;
 
     let new_confrontation = confrontation::ActiveModel {
         line_one_id: Set(line_one.id),

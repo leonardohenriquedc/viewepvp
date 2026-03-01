@@ -1,4 +1,5 @@
 use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, QueryFilter, Set, TransactionTrait};
+use tracing;
 
 use crate::dto::line_dto::LineWithPlayersResponse;
 use crate::models::{line, line_player, player};
@@ -43,6 +44,7 @@ pub async fn create_line(
         .await?;
 
     if found_players.len() != 5 {
+        tracing::debug!(requested = ?nicknames, "Some players not found");
         let found_nicks: Vec<&str> = found_players.iter().map(|p| p.nickname.as_str()).collect();
         let missing: Vec<&str> = nicknames
             .iter()

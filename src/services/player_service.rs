@@ -1,4 +1,5 @@
 use sea_orm::{ActiveModelTrait, ColumnTrait, DbConn, EntityTrait, ModelTrait, QueryFilter, Set};
+use tracing;
 
 use crate::dto::player_dto::PlayerResponse;
 use crate::models::player;
@@ -26,6 +27,7 @@ pub async fn create_player(
         .await?;
 
     if existing.is_some() {
+        tracing::debug!(nickname = %nickname, "Nickname already exists");
         return Err(sea_orm::DbErr::Custom(format!(
             "Nickname '{}' já existe",
             nickname
