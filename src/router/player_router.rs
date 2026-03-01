@@ -14,13 +14,20 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 }
 
 async fn list_players(db: web::Data<DbConn>) -> impl Responder {
+    tracing::info!("GET /players - listing players");
     let result = player_service::list_players(db.get_ref()).await;
 
     match result {
-        Ok(players) => HttpResponse::Ok().json(players),
-        Err(err) => HttpResponse::InternalServerError().json(serde_json::json!({
-            "error": err.to_string()
-        })),
+        Ok(players) => {
+            tracing::info!(count = players.len(), "Players listed successfully");
+            HttpResponse::Ok().json(players)
+        }
+        Err(err) => {
+            tracing::error!(error = %err, "Failed to list players");
+            HttpResponse::InternalServerError().json(serde_json::json!({
+                "error": err.to_string()
+            }))
+        }
     }
 }
 
@@ -28,6 +35,7 @@ async fn create_player(
     db: web::Data<DbConn>,
     body: web::Json<CreatePlayerRequest>,
 ) -> impl Responder {
+    tracing::info!(nickname = %body.nickname, "POST /players - creating player");
     let result = player_service::create_player(
         db.get_ref(),
         body.nickname.clone(),
@@ -36,10 +44,16 @@ async fn create_player(
     .await;
 
     match result {
-        Ok(player) => HttpResponse::Created().json(player),
-        Err(err) => HttpResponse::BadRequest().json(serde_json::json!({
-            "error": err.to_string()
-        })),
+        Ok(player) => {
+            tracing::info!(nickname = %player.nickname, "Player created successfully");
+            HttpResponse::Created().json(player)
+        }
+        Err(err) => {
+            tracing::warn!(error = %err, "Failed to create player");
+            HttpResponse::BadRequest().json(serde_json::json!({
+                "error": err.to_string()
+            }))
+        }
     }
 }
 
@@ -48,12 +62,19 @@ async fn delete_player(
     path: web::Path<String>,
 ) -> impl Responder {
     let nickname = path.into_inner();
+    tracing::info!(nickname = %nickname, "DELETE /players - deleting player");
     let result = player_service::delete_player(db.get_ref(), &nickname).await;
 
     match result {
-        Ok(()) => HttpResponse::NoContent().finish(),
-        Err(err) => HttpResponse::BadRequest().json(serde_json::json!({
-            "error": err.to_string()
-        })),
+        Ok(()) => {
+            tracing::info!(nickname = %nickname, "Player deleted successfully");
+            HttpResponse::NoContent().finish()
+        }
+        Err(err) => {
+            tracing::warn!(error = %err, "Failed to delete player");
+            HttpResponse::BadRequest().json(serde_json::json!({
+                "error": err.to_string()
+            }))
+        }
     }
 }
