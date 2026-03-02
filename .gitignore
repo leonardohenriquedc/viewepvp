@@ -2,4 +2,4 @@
 .env 
 database.db 
 Cargo.lock
-migration/target
+migration/target/*
