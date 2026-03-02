@@ -2,4 +2,5 @@
 .env 
 database.db 
 Cargo.lock
+migration/Cargo.lock
 migration/target/*
