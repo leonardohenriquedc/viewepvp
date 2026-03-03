@@ -10,6 +10,8 @@ pub struct Model {
     pub name: String,
     pub password: String,
     pub group_id: i32,
+    #[sea_orm(unique)]
+    pub email: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
