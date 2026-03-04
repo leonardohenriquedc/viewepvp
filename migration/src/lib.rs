@@ -10,6 +10,9 @@ mod m20260302_220419_add_group_tb_player;
 mod m20260302_223728_add_group_tb_confrontation;
 mod m20260302_232438_tb_user;
 mod m20260303_080705_add_column_email_tb_user;
+mod m20260304_225934_remove_group_id_tb_user;
+mod m20260304_232341_tb_role;
+mod m20260304_232444_tb_group_user;
 
 pub struct Migrator;
 
@@ -27,6 +30,9 @@ impl MigratorTrait for Migrator {
             Box::new(m20260302_223728_add_group_tb_confrontation::Migration),
             Box::new(m20260302_232438_tb_user::Migration),
             Box::new(m20260303_080705_add_column_email_tb_user::Migration),
+            Box::new(m20260304_225934_remove_group_id_tb_user::Migration),
+            Box::new(m20260304_232341_tb_role::Migration),
+            Box::new(m20260304_232444_tb_group_user::Migration),
         ]
     }
 }
