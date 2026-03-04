@@ -8,3 +8,5 @@ pub mod tb_line;
 pub mod tb_line_player;
 pub mod tb_player;
 pub mod tb_user;
+
+pub mod custom_erros;
