@@ -14,17 +14,23 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(has_many = "super::tb_confrontation::Entity")]
     TbConfrontation,
+    #[sea_orm(has_many = "super::tb_group_user::Entity")]
+    TbGroupUser,
     #[sea_orm(has_many = "super::tb_line::Entity")]
     TbLine,
     #[sea_orm(has_many = "super::tb_player::Entity")]
     TbPlayer,
-    #[sea_orm(has_many = "super::tb_user::Entity")]
-    TbUser,
 }
 
 impl Related<super::tb_confrontation::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::TbConfrontation.def()
+    }
+}
+
+impl Related<super::tb_group_user::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::TbGroupUser.def()
     }
 }
 
@@ -37,12 +43,6 @@ impl Related<super::tb_line::Entity> for Entity {
 impl Related<super::tb_player::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::TbPlayer.def()
-    }
-}
-
-impl Related<super::tb_user::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::TbUser.def()
     }
 }
 
