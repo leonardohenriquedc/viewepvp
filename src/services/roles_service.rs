@@ -57,3 +57,19 @@ pub async fn find_role(
 
     Ok(role)
 }
+
+pub async fn find_role_by_id(
+    db: DatabaseConnection,
+    id: i32,
+) -> Result<tb_role::Model, sea_orm::DbErr> {
+    let role = tb_role::Entity::find_by_id(id)
+        .one(&db)
+        .await
+        .unwrap()
+        .ok_or_else(|| {
+            tracing::error!("Role not found");
+            sea_orm::DbErr::Custom("Role not found".to_string())
+        })?;
+
+    Ok(role)
+}

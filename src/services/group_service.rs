@@ -2,10 +2,7 @@ use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter,
 };
 
-use crate::{
-    dto::group_dto::{self, GroupDto},
-    models::tb_group,
-};
+use crate::{dto::group_dto::GroupDto, models::tb_group};
 
 pub async fn create_group(
     db: DatabaseConnection,
@@ -50,6 +47,23 @@ pub async fn find_group(
 ) -> Result<tb_group::Model, sea_orm::DbErr> {
     let group = tb_group::Entity::find()
         .filter(tb_group::Column::Name.eq(&group.name))
+        .one(&db)
+        .await
+        .unwrap()
+        .ok_or_else(|| {
+            tracing::error!("Role not found");
+            sea_orm::DbErr::Custom("Role not found".to_string())
+        })
+        .unwrap();
+
+    Ok(group)
+}
+
+pub async fn find_group_by_id(
+    db: DatabaseConnection,
+    id: i32,
+) -> Result<tb_group::Model, sea_orm::DbErr> {
+    let group = tb_group::Entity::find_by_id(id)
         .one(&db)
         .await
         .unwrap()

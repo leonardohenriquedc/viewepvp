@@ -2,6 +2,8 @@
 
 pub mod prelude;
 
+pub mod custom_erros;
+pub mod jwt_structs;
 pub mod tb_confrontation;
 pub mod tb_group;
 pub mod tb_group_user;

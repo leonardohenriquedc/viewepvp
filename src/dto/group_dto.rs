@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct GroupDto {
     pub name: String,
 }
