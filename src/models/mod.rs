@@ -2,13 +2,13 @@
 
 pub mod prelude;
 
-pub mod custom_erros;
-pub mod jwt_structs;
 pub mod tb_confrontation;
 pub mod tb_group;
 pub mod tb_group_user;
 pub mod tb_line;
 pub mod tb_line_player;
+pub mod tb_permissions;
 pub mod tb_player;
 pub mod tb_role;
+pub mod tb_role_permissions;
 pub mod tb_user;

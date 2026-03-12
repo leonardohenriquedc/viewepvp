@@ -13,6 +13,8 @@ mod m20260303_080705_add_column_email_tb_user;
 mod m20260304_225934_remove_group_id_tb_user;
 mod m20260304_232341_tb_role;
 mod m20260304_232444_tb_group_user;
+mod m20260312_182244_tb_permissions;
+mod m20260312_182335_tb_role_permissions;
 
 pub struct Migrator;
 
@@ -33,6 +35,8 @@ impl MigratorTrait for Migrator {
             Box::new(m20260304_225934_remove_group_id_tb_user::Migration),
             Box::new(m20260304_232341_tb_role::Migration),
             Box::new(m20260304_232444_tb_group_user::Migration),
+            Box::new(m20260312_182244_tb_permissions::Migration),
+            Box::new(m20260312_182335_tb_role_permissions::Migration),
         ]
     }
 }

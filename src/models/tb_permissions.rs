@@ -3,25 +3,17 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "tb_role")]
+#[sea_orm(table_name = "tb_permissions")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub role: String,
+    pub name: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::tb_group_user::Entity")]
-    TbGroupUser,
     #[sea_orm(has_many = "super::tb_role_permissions::Entity")]
     TbRolePermissions,
-}
-
-impl Related<super::tb_group_user::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::TbGroupUser.def()
-    }
 }
 
 impl Related<super::tb_role_permissions::Entity> for Entity {

@@ -5,6 +5,8 @@ pub use super::tb_group::Entity as TbGroup;
 pub use super::tb_group_user::Entity as TbGroupUser;
 pub use super::tb_line::Entity as TbLine;
 pub use super::tb_line_player::Entity as TbLinePlayer;
+pub use super::tb_permissions::Entity as TbPermissions;
 pub use super::tb_player::Entity as TbPlayer;
 pub use super::tb_role::Entity as TbRole;
+pub use super::tb_role_permissions::Entity as TbRolePermissions;
 pub use super::tb_user::Entity as TbUser;
