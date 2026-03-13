@@ -7,7 +7,7 @@ use sea_orm::DatabaseConnection;
 use crate::{
     dto::{login_dto::LoginDto, user_dto::UserDto},
     models::{custom_erros::CustomError, jwt_structs::Claims},
-    services::user_service::{create_user, find_user_by_email},
+    services::user_service::find_user_by_email,
 };
 
 pub async fn validate_login(
@@ -49,7 +49,7 @@ pub async fn validate_login(
     Ok(result_token)
 }
 
-fn generate_token(claims: Claims) -> Result<String, CustomError> {
+pub fn generate_token(claims: Claims) -> Result<String, CustomError> {
     let token = encode(
         &JHeader::default(),
         &claims,
@@ -63,16 +63,4 @@ fn generate_token(claims: Claims) -> Result<String, CustomError> {
     let token = token.ok().unwrap();
 
     Ok(token)
-}
-
-pub async fn new_user(db: DatabaseConnection, user_dto: UserDto) -> Result<String, CustomError> {
-    let user = create_user(db.clone(), user_dto.clone()).await;
-
-    if user.is_err() {
-        tracing::debug!("User already exists: {}", user_dto.email);
-
-        return Err(CustomError::ThisObjectAlreadyExists);
-    }
-
-    Ok(user.ok().unwrap())
 }
