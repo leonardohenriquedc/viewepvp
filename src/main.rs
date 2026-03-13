@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    tracing::info!("Starting server on 127.0.0.1:8080");
+    tracing::info!("Starting server on 127.0.0.1:8000");
 
     let db = Database::connect(env::var("DATABASE_URL").unwrap())
         .await
