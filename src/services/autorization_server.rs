@@ -9,7 +9,7 @@ use crate::{
     services::{authentication_server::generate_token, user_service::get_user_and_relations},
 };
 
-pub async fn authentication(
+pub async fn authentication_token(
     db: DatabaseConnection,
     token: String,
 ) -> Result<(String, UserRelations), CustomError> {
@@ -18,7 +18,7 @@ pub async fn authentication(
         &DecodingKey::from_secret(env::var("SECRET_KEY").unwrap().as_ref()),
         &Validation::new(jsonwebtoken::Algorithm::HS256),
     )
-    .map_err(|_| CustomError::PermissionDenied("decoding error of the token".to_string()))?;
+    .map_err(|err| CustomError::PermissionDenied("decoding error of the token".to_string()))?;
 
     let claims = decoded.claims;
 
@@ -31,9 +31,24 @@ pub async fn authentication(
         },
     )
     .await
-    .map_err(|_| CustomError::NotFound("This sub not found".to_string()))?;
+    .map_err(|err| CustomError::NotFound("This sub not found".to_string()))?;
 
     let new_token = generate_token(claims)?;
 
     Ok((new_token, user_relations))
+}
+
+pub async fn authentication_roles_permissions_by_group(
+    user: UserRelations,
+    group_name: String,
+) -> bool {
+    let mut exists = false;
+
+    user.groups.iter().for_each(|group| {
+        if group.name == group_name {
+            exists = true;
+        }
+    });
+
+    exists
 }
