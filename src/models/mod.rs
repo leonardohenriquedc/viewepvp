@@ -12,3 +12,6 @@ pub mod tb_player;
 pub mod tb_role;
 pub mod tb_role_permissions;
 pub mod tb_user;
+
+pub mod custom_erros;
+pub mod jwt_structs;
