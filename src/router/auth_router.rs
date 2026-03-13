@@ -1,7 +1,7 @@
 use actix_web::web;
 
-use crate::handlers::authentication::{create_user, login};
+use crate::handlers::authentication::{login, new_user};
 
 pub fn config_auth(cfg: &mut web::ServiceConfig) {
-    cfg.service(login).service(create_user);
+    cfg.service(login).service(new_user);
 }

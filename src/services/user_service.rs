@@ -84,7 +84,7 @@ pub async fn get_user_and_relations(
         .column_as(tb_group::Column::Name, "group_name")
         .column_as(tb_role::Column::Id, "role_id")
         .column_as(tb_role::Column::Role, "role_name")
-        .join(JoinType::InnerJoin, tb_group_user::Relation::TbUser.def())
+        .join(JoinType::InnerJoin, tb_user::Relation::TbGroupUser.def())
         .join(JoinType::InnerJoin, tb_group_user::Relation::TbGroup.def())
         .join(JoinType::InnerJoin, tb_group_user::Relation::TbRole.def())
         .filter(tb_user::Column::Id.eq(user.id))
@@ -93,6 +93,7 @@ pub async fn get_user_and_relations(
         .await?;
 
     if rows.is_empty() {
+        tracing::error!("User not found");
         return Err(DbErr::RecordNotFound("User not found".into()));
     }
 

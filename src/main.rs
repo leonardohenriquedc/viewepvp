@@ -11,7 +11,7 @@ use dotenv::dotenv;
 use sea_orm::Database;
 use tracing_subscriber::{EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::router::auth_router::config_auth;
+use crate::router::{auth_router::config_auth, groups_router::config_groups};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -45,6 +45,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .app_data(db_data.clone())
             .configure(config_auth)
+            .configure(config_groups)
     })
     .bind(("127.0.0.1", 8000))?
     .run()
