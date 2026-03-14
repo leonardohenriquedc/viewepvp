@@ -1,3 +1,2 @@
-pub mod confrontation_router;
-pub mod line_router;
-pub mod player_router;
+pub mod auth_router;
+pub mod groups_router;
